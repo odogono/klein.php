@@ -184,6 +184,7 @@ Views are compiled and run in the scope of `$response` so all response methods c
         ip()                                //Get the request IP
         userAgent()                         //Get the request user agent
         uri()                               //Get the request URI
+        isAjax()                            //Is the request ajax?
         <param>                             //Gets a request parameter
 
     $response->
