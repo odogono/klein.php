@@ -286,6 +286,12 @@ class _Request {
     public function uri() {
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
+
+    //Is this an ajax request?
+    public function isAjax() {
+      return isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
+        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
 }
 
 class _Response extends StdClass {

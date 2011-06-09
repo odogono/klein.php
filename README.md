@@ -195,70 +195,69 @@ echo $this->query(array('page' => 2))   //Modify the current query string
 
 ## API
 
-```php
-$request->
-    header($key)                        //Gets a request header
-    cookie($key)                        //Gets a cookie from the request
-    session($key)                       //Gets a session variable
-    param($key, $default = null)        //Gets a request parameter (get, post, named)
-    params()                            //Return all parameters
-    params($mask = null)                //Return all parameters that match the mask array - extract() friendly
-    validate($param, $err_msg = null)   //Starts a validator chain
-    method()                            //Gets the request method
-    method($method)                     //Checks if the request method is $method, i.e. method('post') => true
-    isSecure($required = false)         //https? Redirect if $required is true and the request is not secure
-    id()                                //Gets a unique ID for the request
-    ip()                                //Get the request IP
-    userAgent()                         //Get the request user agent
-    uri()                               //Get the request URI
-    <param>                             //Gets a request parameter
+    $request->
+        header($key)                        //Gets a request header
+        cookie($key)                        //Gets a cookie from the request
+        session($key)                       //Gets a session variable
+        param($key, $default = null)        //Gets a request parameter (get, post, named)
+        params()                            //Return all parameters
+        params($mask = null)                //Return all parameters that match the mask array - extract() friendly
+        validate($param, $err_msg = null)   //Starts a validator chain
+        method()                            //Gets the request method
+        method($method)                     //Checks if the request method is $method, i.e. method('post') => true
+        isSecure($required = false)         //https? Redirect if $required is true and the request is not secure
+        id()                                //Gets a unique ID for the request
+        ip()                                //Get the request IP
+        userAgent()                         //Get the request user agent
+        uri()                               //Get the request URI
+        isAjax()                            //Is the request ajax?
+        <param>                             //Gets a request parameter
 
-$response->
-    header($key, $value = null)                     //Sets a response header
-    cookie($key, $value = null, $expiry = null)     //Sets a cookie
-    cookie($key, null)                              //Removes a cookie
-    flash($msg, $type = 'error')                    //Sets a flash message
-    send($object, $type = 'json', $filename = null) //$type can be 'csv', 'json', or 'file'
-    code($code)                                     //Sends an HTTP response code
-    redirect($url, $code = 302)                     //Redirect to the specified URL
-    refresh()                                       //Redirect to the current URL
-    back()                                          //Redirect to the referer
-    render($view, $data = array())                  //Renders a view or partial
-    onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
-    set($key, $value = null)                        //Set a view property or helper
-    set($arr)
-    escape($str)                                    //Escapes a string
-    query($key, $value = null)                      //Modify the current query string
-    query($arr)
-    param($param, $default = null)                  //Gets an escaped request parameter
-    getFlashes($type = 'error')                     //Retrieves and clears all flashes of $type
-    flush()                                         //Flush all open output buffers
-    discard()                                       //Discard all open output buffers
-    outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
-    chunk($str = null)                              //Enable response chunking (see the wiki)
-    dump($obj)                                      //Dump an object
-    <callback>($arg1, ...)                          //Calls a user-defined helper
-    <property>                                      //Gets a user-defined property
+    $response->
+        header($key, $value = null)                     //Sets a response header
+        cookie($key, $value = null, $expiry = null)     //Sets a cookie
+        cookie($key, null)                              //Removes a cookie
+        flash($msg, $type = 'error')                    //Sets a flash message
+        send($object, $type = 'json', $filename = null) //$type can be 'csv', 'json', or 'file'
+        code($code)                                     //Sends an HTTP response code
+        redirect($url, $code = 302)                     //Redirect to the specified URL
+        refresh()                                       //Redirect to the current URL
+        back()                                          //Redirect to the referer
+        render($view, $data = array())                  //Renders a view or partial
+        onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
+        set($key, $value = null)                        //Set a view property or helper
+        set($arr)
+        escape($str)                                    //Escapes a string
+        query($key, $value = null)                      //Modify the current query string
+        query($arr)
+        param($param, $default = null)                  //Gets an escaped request parameter
+        getFlashes($type = 'error')                     //Retrieves and clears all flashes of $type
+        flush()                                         //Flush all open output buffers
+        discard()                                       //Discard all open output buffers
+        outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
+        chunk($str = null)                              //Enable response chunking (see the wiki)
+        dump($obj)                                      //Dump an object
+        <callback>($arg1, ...)                          //Calls a user-defined helper
+        <property>                                      //Gets a user-defined property
 
-$validator->
-    notNull()                           //The string must not be null
-    isLen($length)                      //The string must be the exact length
-    isLen($min, $max)                   //The string must be between $min and $max length (inclusive)
-    isInt()                             //Checks for a valid integer
-    isFloat()                           //Checks for a valid float/decimal
-    isEmail()                           //Checks for a valid email
-    isUrl()                             //Checks for a valid URL
-    isIp()                              //Checks for a valid IP
-    isAlpha()                           //Checks for a-z (case insensitive)
-    isAlnum()                           //Checks for alphanumeric characters
-    contains($needle)                   //Checks if the string contains $needle
-    isChars($chars)                     //Validates against a character list
-    isRegex($pattern, $modifiers = '')  //Validates against a regular expression
-    notRegex($pattern, $modifiers ='')
-    is<Validator>()                     //Validate against a custom validator
-    not<Validator>()                    //The validator can't match
-    <Validator>()                       //Alias for is<Validator>()
-```
+    $validator->
+        notNull()                           //The string must not be null
+        isLen($length)                      //The string must be the exact length
+        isLen($min, $max)                   //The string must be between $min and $max length (inclusive)
+        isInt()                             //Checks for a valid integer
+        isFloat()                           //Checks for a valid float/decimal
+        isEmail()                           //Checks for a valid email
+        isUrl()                             //Checks for a valid URL
+        isIp()                              //Checks for a valid IP
+        isAlpha()                           //Checks for a-z (case insensitive)
+        isAlnum()                           //Checks for alphanumeric characters
+        contains($needle)                   //Checks if the string contains $needle
+        isChars($chars)                     //Validates against a character list
+        isRegex($pattern, $modifiers = '')  //Validates against a regular expression
+        notRegex($pattern, $modifiers ='')
+        is<Validator>()                     //Validate against a custom validator
+        not<Validator>()                    //The validator can't match
+        <Validator>()                       //Alias for is<Validator>()
 
 ## License
 
