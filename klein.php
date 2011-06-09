@@ -269,7 +269,7 @@ class _Request {
         if (session_id() === '') {
             session_start();
         }
-        return isset($_SESSION[$key]) ? $key : $default;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
 
     //Gets the request IP address
@@ -401,7 +401,9 @@ class _Response extends StdClass {
                 $filename = basename($object);
             }
             header('Content-Disposition: attachment; filename="'.$filename.'"');
-            fpassthru($object);
+            $fp = fopen($object,'r');
+            fpassthru($fp);
+            fclose($fp);
             exit;
         }
     }
