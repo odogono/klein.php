@@ -380,7 +380,7 @@ class _Response extends StdClass {
         switch ($type) {
         case 'json':
             $json = json_encode($object);
-            header('Content-Type: text/javascript; charset=utf-8');
+            header('Content-Type: application/json; charset=utf-8');
             echo $json;
             exit;
         case 'csv':
