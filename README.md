@@ -16,7 +16,8 @@
 *Example 1* - Respond to all requests
 
 ```php
-respond('*', function () {
+<?php
+respond(function () {
     echo 'Hello World!';
 });
 ```
@@ -24,6 +25,7 @@ respond('*', function () {
 *Example 2* - Named parameters
 
 ```php
+<?php
 respond('/[:name]', function ($request) {
     echo 'Hello ' . $request->name;
 });
@@ -32,16 +34,17 @@ respond('/[:name]', function ($request) {
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
 ```php
-respond('GET',    '/posts',       $callback);
-respond('POST',   '/post/create', $callback);
-respond('PUT',    '/post/[i:id]', $callback);
-respond('DELETE', '/post/[i:id]', $callback);
+<?php
+respond('GET', '/posts', $callback);
+respond('POST', '/posts/create', $callback);
+respond('PUT', '/posts/[i:id]', $callback);
+respond('DELETE', '/posts/[i:id]', $callback);
 
 //To match multiple request methods:
 respond(array('POST','GET'), $route, $callback);
 
 //Or you might want to handle the requests in the same place
-respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
+respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
     switch ($request->action) {
         //
     }
@@ -51,8 +54,19 @@ respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) 
 *Example 4* - Sending objects / files
 
 ```php
-respond('/report.[csv|json:format]?', function ($reqest, $response) {
-    $send = $request->param('format', 'json'); //Get the format, or fallback to JSON as the default
+<?php
+respond(function ($request, $response) {
+    $response->xml = function ($object) {
+        //Custom xml output function
+    }
+    $response->csv = function ($object) {
+        //Custom csv output function
+    }
+});
+
+respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
+    //Get the format or fallback to JSON as the default
+    $send = $request->param('format', 'json');
     $response->$send($report);
 });
 
@@ -64,7 +78,8 @@ respond('/report/latest', function ($request, $response) {
 *Example 5* - All together
 
 ```php
-respond('*', function ($reguest, $response, $app) {
+<?php
+respond(function ($reguest, $response, $app) {
     //Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
         $response->flash($err_msg);
@@ -98,16 +113,15 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 ## Route namespaces
 
 ```php
+<?php
 with('/users', function () {
 
-    //Show all users
-    respond('/?', function ($request, $response) {
-        //
+    respond('GET', '/?', function ($request, $response) {
+        //Show all users
     });
 
-    //Show a single user
-    respond('/[:id]/?', function ($request, $response) {
-        //
+    respond('GET', '/[:id]', function ($request, $response) {
+        //Show a single user
     });
 
 });
@@ -122,6 +136,7 @@ foreach(array('projects', 'posts') as $controller) {
 To add a custom validator use `addValidator($method, $callback)`
 
 ```php
+<?php
 addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
@@ -192,6 +207,7 @@ You can send properties or helpers to the view by assigning them
 to the `$response` object, or by using the second arg of `$response->render()`
 
 ```php
+<?php
 $response->escape = function ($str) {
     return htmlentities($str);
 };
@@ -203,13 +219,14 @@ $response->render('myview.phtml', array('title' => 'My View'));
 
 *myview.phtml*
 
-```php
+```html
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
 Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
 
 ```php
+<?php
 $this->render('partial.html')           //Render partials
 $this->param('myvar')                   //Access request parameters
 echo $this->query(array('page' => 2))   //Modify the current query string
@@ -218,6 +235,7 @@ echo $this->query(array('page' => 2))   //Modify the current query string
 ## API
 
 ```php
+<?php
 $request->
     header($key)                        //Gets a request header
     cookie($key)                        //Gets a cookie from the request
@@ -239,15 +257,17 @@ $response->
     header($key, $value = null)                     //Sets a response header
     cookie($key, $value = null, $expiry = null)     //Sets a cookie
     cookie($key, null)                              //Removes a cookie
-    flash($msg, $type = 'error', $params = array()  //Sets a flash message
+    flash($msg, $type = 'info', $params = array()   //Sets a flash message
     file($file, $filename = null)                   //Send a file
     json($object, $callback = null)                 //Send an object as JSON(p)
-    csv($object, $filename = 'output.csv', ...)     //Send an object as CSV
+    markdown($str, $args, ...)                      //Return a string formatted with markdown
     code($code)                                     //Sends an HTTP response code
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL
     back()                                          //Redirect to the referer
-    render($view, $data = array())                  //Renders a view or partial
+    render($view, $data = array())                  //Renders a view or partial (in the scope of $response)
+    layout($layout)                                 //Sets the view layout
+    yield()                                         //Call inside the layout to render the view content
     onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
     set($key, $value = null)                        //Set a view property or helper
     set($arr)
@@ -255,10 +275,10 @@ $response->
     query($key, $value = null)                      //Modify the current query string
     query($arr)
     param($param, $default = null)                  //Gets an escaped request parameter
-    flashes($type = 'error')                        //Retrieves and clears all flashes of $type
+    flashes($type = null)                           //Retrieves and clears all flashes of $type
     flush()                                         //Flush all open output buffers
     discard()                                       //Discard all open output buffers
-    outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
+    buffer()                                        //Return the contents of the output buffer as a string
     chunk($str = null)                              //Enable response chunking (see the wiki)
     dump($obj)                                      //Dump an object
     <callback>($arg1, ...)                          //Calls a user-defined helper
