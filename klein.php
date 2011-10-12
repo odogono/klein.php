@@ -298,15 +298,8 @@ class _Request {
 
     //Gets a session variable associated with the request
     public function session($key, $default = null) {
-<<<<<<< HEAD
-        if (session_id() === '') {
-            session_start();
-        }
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
-=======
         startSession();
         return isset($_SESSION[$key]) ? $key : $default;
->>>>>>> refs/remotes/chriso/master
     }
 
     //Gets the request IP address
