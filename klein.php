@@ -419,6 +419,7 @@ class _Response extends StdClass {
         header('Content-length: ' . filesize($path));
         header('Content-Disposition: attachment; filename="'.$filename.'"');
         readfile($path);
+        exit;
     }
 
     //Sends an object as json
@@ -433,6 +434,7 @@ class _Response extends StdClass {
         } else {
             echo $json;
         }
+        exit;
     }
 
     //Sends a HTTP response code
