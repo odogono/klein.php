@@ -261,11 +261,12 @@ $response->
     file($file, $filename = null)                   //Send a file
     json($object, $callback = null)                 //Send an object as JSON(p)
     markdown($str, $args, ...)                      //Return a string formatted with markdown
-    code($code)                                     //Sends an HTTP response code
+    code($code = null)                              //Return the HTTP response code, or send a new code
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL
     back()                                          //Redirect to the referer
     render($view, $data = array())                  //Renders a view or partial (in the scope of $response)
+    partial($view, $data = array())                 //Renders a partial without a layout (in the scope of $response)
     layout($layout)                                 //Sets the view layout
     yield()                                         //Call inside the layout to render the view content
     onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
